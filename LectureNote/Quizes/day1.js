@@ -20,6 +20,7 @@
 
 /* Javascript */
 const _list = document.querySelectorAll("button");
+
 const list = Array.from(_list); // from
 
 function filterSome(t) {
@@ -38,3 +39,9 @@ function filterSome(t) {
 console.log(filterSome("a"));
 console.log(filterSome("t"));
 console.log(filterSome("e"));
+
+document.querySelectorAll.forEach(element => {
+  element.addEventListener("click", function({ target }) {
+    console.log(target.innerText);
+  });
+});
