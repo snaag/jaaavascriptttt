@@ -37,10 +37,9 @@
   Array.prototype.getIndex = function() {};
 
   for (let idx in data) {
-    console.log(data[idx]);
+    console.log(data[idx]); // 1, 2, undefined, NaN, null, HelloWorld, ?
   }
-  // 1, 2, undefined, NaN, null, HelloWorld, ?
-  // 하지만 이런 side effect가 생길 수 있다 (예상치 못한 ?의 출력)
+  // 이런 side effect가 생길 수 있다 (예상치 못한 ?의 출력)
   // 따라서 절대 배열에서 for in 을 쓰면 안된다
   ```
 
@@ -110,14 +109,17 @@ console.log(pre2); // pre2 = hello, apple, orange, 100, yo
     list1.push("hey");
     console.log(list1 == list2); // true
     console.log(list2); // hello, yo, hey
+    // list1에만 추가했는데, list2에도 추가된 것을 볼 수 있다
 
     list2.push("hey2");
     console.log(list1 == list2); // true
     console.log(list1); // hello, yo, hey, hey2
+    // list2에만 추가했는데, list1에도 추가된 것을 볼 수 있다
 
     list1 = list1.concat(list2, "hello");
     console.log(list1 == list2); // false
     console.log(list2); // hello, yo, hey, hey2
+    // list1에만 추가했는데, list2에도 추가된 것을 볼 수 있다
 
     // (3) Array.from() 을 사용하여 값을 전달한 경우
     let a = [1, 2, 3, 4];
@@ -193,12 +195,6 @@ function filterSome(t) {
 console.log(filterSome("a"));
 console.log(filterSome("t"));
 console.log(filterSome("e"));
-
-document.querySelectorAll.forEach(element => {
-  element.addEventListener("click", function({ target }) {
-    console.log(target.innerText);
-  });
-});
 ```
 
 # day2.js
