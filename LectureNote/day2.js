@@ -20,14 +20,14 @@ function getObj() {
 }
 
 const obj = getObj();
-obj.setName("yuniq"); // 유 니 큐 !
+obj.setName("snaaag");
 console.log(obj.getName());
 
 /* Destructuring */
 // Array
 // array의 식별자는 위치이다
 // array의 값 들 중 원하는 위치의 값을 쉽게 가져올 수 있다
-let data = ["snaag", "sanga", "yuniq", "yunhee"];
+let data = ["snaag", "sanga", "snaaag", "saaang"];
 let [name1, , name2] = data; // 중간에 안받으려면 , ,로 넘기고, 뒤에거를 안받으려면 생략하면 된다
 console.log(name1, name2);
 

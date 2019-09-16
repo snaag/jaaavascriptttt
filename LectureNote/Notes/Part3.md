@@ -116,9 +116,7 @@ console.log(template); // welcome to starbucks !! 주문가능항목 주문 가�
   data.forEach(v => {
     // 1. forEach로, data의 원소들을 하나 받는다
     // 2. 그리고 data의 name과 item에 접근하여
-    let template = fn`<div>welcome to ${
-      v.name
-    } !!</div><h2>주문가능항목</h2><div>${v.items}</div>`;
+    let template = fn`<div>welcome to ${v.name} !!</div><h2>주문가능항목</h2><div>${v.items}</div>`;
 
     console.log(template); // <div>welcome to starbucks !!</div><h2>주문가능항목</h2><div>주문 가능한 상품이 없습니다</div>
   });
@@ -166,9 +164,144 @@ function fn(tags, name, items) {
 }
 
 data.forEach(v => {
-  let template = fn`<h1>welcome to ${v.name} !!</h1><h3>주문가능항목</h3><p>${
-    v.items
-  }</p>`;
+  let template = fn`<h1>welcome to ${v.name} !!</h1><h3>주문가능항목</h3><p>${v.items}</p>`;
   document.querySelector("#message").innerHTML += template;
 });
 ```
+
+## Function
+
+### Arrow function 활용
+
+### Arrow function의 this context
+
+### function default parameters
+
+### rest parameters
+
+## Object
+
+### class 를 통한 객체 생성
+
+- JS에는 class가 없는데..? 그렇다면 뭐지? `keyword` 이다.
+- `prototype` 기반으로 만드나, `class` 로 만드나, 둘 다 함수인 것은 같다.
+
+#### prototype 기반으로 만들기
+
+```javascript
+function Health(name) {
+  this.name = name;
+}
+
+Health.prototype.showHealth = function() {
+  console.log(this.name + "님 안녕하세요");
+};
+
+const h = new Health("crong");
+h.showHealth();
+```
+
+#### class 를 통해 만들기
+
+```javascript
+class Health {
+  constructor(name, lastTime) {
+    // 내장 키워드 constructor
+    this.name = name;
+    this.lastTime = lastTime;
+  }
+
+  showHealth() {
+    console.log("안녕하세요 " + this.name);
+  }
+}
+
+const myHealth = new Health("crong");
+myHealth.showHealth();
+console.log(toString.call(myHealth));
+```
+
+- `class`와 `prototype`으로 선언된 객체는 내부적으로는 같은 값(구조)을 갖는다.
+- 하지만 `class`로 구현할 경우, 모듈화가 되기 때문에 **가독성** 면에서 유리하다.
+
+### Object assign 으로 JS 객체 만들기
+
+- ES5에서 `Object create` 라는 method가 있었다. 이것은 `prototype` 기반으로 `object`를 만들며, `object`를 만드는 표준적인 방법이다.
+
+```javascript
+const healthObj = {
+  showHealth: function() {
+    console.log("오늘의 운동시간: " + this.healthTime);
+  }
+};
+
+const myHealth = Object.create(healthObj);
+myHealth.healthTime = "11:20";
+myHealth.name = "crong"; // 값을 일일히 넣어줘야한다는 불편함 있음
+
+console.log(myHealth);
+```
+
+- ES6에서 `Object create`가 개선된 `Object assign` 이라는 method가 등장했다.
+
+```javascript
+const healthObj = {
+  showHealth: function() {
+    console.log("오늘의 운동시간: " + this.healthTime);
+  }
+};
+
+const myHealth2 = Object.assign(Object.create(healthObj), {
+  name: "crong",
+  lastTime: "11:20"
+});
+
+console.log("myHealth is " + myHealth2);
+```
+
+- 결과는 둘이 같으나, `Object assign`의 경우, 들어갈 함수와 값을 한꺼번에 넣을 수 있다는 장점이 있다.
+- 만약 `Object assign` 의 과정이 번거롭다면, `Wrapper class`를 만들어 사용할 수 있다.
+
+### Object assign 으로 Immutable 객체 만들기
+
+- Immutable object를 만들고, 값을 바꾸는 방법
+
+```javascript
+const previousObj = {
+  name: "crong",
+  lastTime: "11:20"
+};
+
+const myHealth = Object.assign({}, previousObj, {
+  lastTime: "12:20",
+  age: 99
+  // 이전 값과 비교하여, 새로운 값만 업데이트된다
+});
+
+console.log(myHealth);
+// { name: 'crong', lastTime: '12:20', age: 99 }
+console.log(previousObj);
+// { name: 'crong', lastTime: '11:20' }
+
+console.log(myHealth === previousObj); // false
+console.log(myHealth.name === previousObj.name); // true
+```
+
+- 질문
+
+```javascript
+const previousObj = {
+  name: "crong",
+  lastTime: "11:20"
+};
+
+const myHealth = Object.assign({}, previousObj, {
+  lastTime: "12:20",
+  age: 99
+});
+
+myHealth.age = 33;
+console.log(myHealth); // { name: 'crong', lastTime: '12:20', age: 33 }
+```
+
+- 이렇게 해도 값이 바뀌는데, 이게 왜 `immutable` 객체를 만드는 것이라고 설명했을까?

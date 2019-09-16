@@ -40,8 +40,8 @@
   }
 
   const obj = getObj();
-  obj.setName("yuniq");
-  console.log(obj.getName()); // yuniq
+  obj.setName("snaag");
+  console.log(obj.getName());
   ```
 
 ### Destructuring Array
@@ -50,7 +50,7 @@
 - `Destructuring` 을 하여, 원하는 `idx` 의 값을 쉽게 가져올 수 있다
 
   ```javascript
-  let data = ["snaag", "sanga", "yuniq", "yunhee"];
+  let data = ["snaag", "sanga", "snaaag", "sangaaa"];
   let [name1, , name2] = data; // 중간에 안받으려면 , ,로 넘기고, 뒤에거를 안받으려면 생략하면 된다
   console.log(name1, name2); // snaag, yuniq
   ```
