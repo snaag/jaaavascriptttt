@@ -12,10 +12,21 @@
 
 - 인프런 강의 (모던 자바스크립트 개발을 위한 ES6 강좌) 정리
 
-#### /LectureNote/note.md
+#### /LectureNote/...
 
-- [여기](./LectureNote/note.md)
-- 강의 들으면서 정리한 내용
+- 강의 내용 정리
+
+##### [Part 1](./LectureNote/Notes/Part1.md)
+
+- scope, string, array
+
+##### [Part 2](./LectureNote/Notes/Part2.md)
+
+- object, destructuring, set & weakset, map & weakmap
+
+##### [Part 3](./LectureNote/Notes/Part3.md)
+
+- template, function, object
 
 #### /LectureNote/Quizes
 

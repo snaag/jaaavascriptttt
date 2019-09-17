@@ -5,7 +5,7 @@
 - function
   - arrow function, this, default parameter, rest parameter
 - object
-  - ...
+  - create object by using class & prototype, object assign, setPropertyOf, prototype chaining
 
 ## Template
 
