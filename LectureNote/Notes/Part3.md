@@ -305,3 +305,86 @@ console.log(myHealth); // { name: 'crong', lastTime: '12:20', age: 33 }
 ```
 
 - 이렇게 해도 값이 바뀌는데, 이게 왜 `immutable` 객체를 만드는 것이라고 설명했을까?
+
+### Object setPrototypeOf 로 객체 만들기
+
+- `setPrototypeOf`
+  - 객체에 어떤 `prototype` 을 setting 해준다.
+
+#### Object 를 만드는 방법
+
+- Object 를 만드는 방법에는 앞서 배운 `Object.assign` 과 오늘 배운 `setPrototypeOf` 가 있다. 둘이 어떻게 다른지 비교해보자.
+
+##### `Object.assign`
+
+```javascript
+const myHealth2 = Object.assign(Object.create(healthObj), {
+  name: "crong",
+  lastTime: "11:20"
+});
+```
+
+- 앞서 immutable 객체를 만들 때 사용하는 것(바뀐 값만 update) 처럼, copy를 떠 새로운 객체를 만들 수 있게 하는 둥의 **범용적인 기능**을 제공한다.
+
+##### `setPrototypeOf`
+
+- `prototype` 에 추가만 해주는 것이기 때문에 `Object.assign` 보다 **명확**하고 **단순**하다.
+
+```javascript
+const healthObj = {
+  // prototype을 미리 만들어줬다
+  showHealth: function() {
+    console.log("오늘 운동시간 : ", this.healthTime);
+  },
+  setHealth: function(newTime) {
+    this.healthTime = newTime;
+  }
+};
+
+const myHealth = {
+  // 객체
+  name: "crong",
+  healthTime: "11:20"
+};
+
+Object.setPrototypeOf(myHealth, healthObj); // myHealth 객체에 prototype으로 healthObj를 지정한다
+myHealth.showHealth(); // 오늘 운동시간 :  11:20
+```
+
+- 이렇게 하면 `myHealth` 객체의 `__proto__` 하위에 두 메소드가 있는 것을 볼 수 있다.
+
+```javascript
+// 이렇게도 만들 수 있다
+const healthObj = {
+  // prototype을 미리 만들어줬다
+  showHealth: function() {
+    console.log("오늘 운동시간 : ", this.healthTime);
+  },
+  setHealth: function(newTime) {
+    this.healthTime = newTime;
+  }
+};
+
+const newobj = Object.setPrototypeOf(
+  {
+    // 바로 object를 만들고, 거기에 앞서 만들어놓은 prototype을 붙였다
+    name: "new crong",
+    healthTime: "new 11:20"
+  },
+  healthObj
+);
+
+console.log(newobj); // { name: 'new crong', lastTime: 'new 11:20' }
+newobj.showHealth(); // 오늘 운동시간 :  new 11:20
+```
+
+- `setPrototypeOf` 는 ES6에서는 사용할 수 있는 문법이지만, 만약 ES5에서 이 기능이 필요하다면 같은 역할을 하는 함수를 만들어서 사용하면 된다. (직접 `__proto__` 에 접근하여 값을 수정하면 된다) [MDN-setPropertyOf](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)
+
+```javascript
+Object.setPrototypeOf =
+  Object.setPrototypeOf ||
+  function(obj, proto) {
+    obj.__proto__ = proto;
+    return obj;
+  };
+```

@@ -195,3 +195,55 @@ console.log(myHealth.name === previousObj.name); // true
 
 // 만약 둘이 가진 모든 값이 갖다고 하더라도, 둘은 같지 않다
 // + 이전 데이터 값의 history를 기억하기때문에, 되돌리기를 할 수 있다
+
+// Object setPrototypeOf로 객체 만들기
+
+// setPrototypeOf:
+// setPrototypeOf: 객체에 어떤 prototype을 추가(set)해준다
+// obj를 만드는 방법:
+// prototype을 method로 추가해서 만드는 것 - object assign
+
+// 이 전에는 object assign으로 하였다
+// const myHealth2 = Object.assign(Object.create(healthObj), {
+//     name: "crong",
+//     lastTime: "11:20"
+//   });
+// copy를 떠 새로운 객체를 만들 수 있도록 하는 범용적인 기능을 제공
+// immutable 객체를 만들 때 사용하였으나, setPrototypeOf는 보다 단순
+
+// setPrototype은 prototype에만 추가해주는 것이기 때문에, 더 명확하고 단순하다
+const healthObj = {
+  showHealth: function() {
+    console.log("오늘 운동시간 : ", this.healthTime);
+  },
+  setHealth: function(newTime) {
+    this.healthTime = newTime;
+  }
+};
+
+const myHealth = {
+  name: "crong",
+  healthTime: "11:20"
+};
+
+Object.setPrototypeOf(myHealth, healthObj);
+myHealth.showHealth(); // 오늘 운동시간 :  11:20
+
+/*
+// 만든 그냥 객체에 prototype을 이렇게 지정해줘!
+Object.setPrototypeOf(myHealth, healthObj); // myHealth객체에 prototype으로 healthObj를 지정해줘
+// 이렇게 하면, 찍어봣을 때 __proto__ 하위에 두 메소드가 있는 것을 볼 수 있다
+console.log("myhealth is ",myHealth);
+*/
+// object assign처럼 이렇게도 쓸 수 있다
+
+const newobj = Object.setPrototypeOf(
+  {
+    name: "new crong",
+    healthTime: "new 11:20"
+  },
+  healthObj
+);
+
+console.log(newobj); // { name: 'new crong', lastTime: 'new 11:20' }
+newobj.showHealth();
