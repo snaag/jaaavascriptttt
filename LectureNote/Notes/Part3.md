@@ -388,3 +388,40 @@ Object.setPrototypeOf =
     return obj;
   };
 ```
+
+### Object setPrototypeOf 로 객체간 prototype chain 생성하기
+
+- `setPrototypeOf` 를 사용하여, 객체간 prototype chain을 만들 수 있다.
+
+```javascript
+// 부모
+const healthObj = {
+  showHealth: function() {
+    console.log("오늘 운동시간 : ", this.healthTime);
+  },
+  setHealth: function(newTime) {
+    this.healthTime = newTime;
+  }
+};
+
+// 자식
+const healthChildObj = {
+  getAge: function() {
+    return this.getAge;
+  }
+};
+
+// prototype chaining
+Object.setPrototypeOf(healthChildObj, healthObj);
+
+console.log("childObj is ", childObj); // childObj is  { age: 22 }
+// console에 찍어보면, setHealth, showHealth가 prototype에 추가된 것을 알 수 있음
+```
+
+- 이처럼 `setPropertyOf` 를 사용하여, 미리 만들어 놓은 것을 다른 곳에서 가져다 쓸 수 있다.
+
+```javascript
+const lastHealthObj = Object.setPrototypeOf(healthChildObj, healthObj);
+```
+
+- lastHealthObj - `__proto__` - `getAge()` - `__proto__` - `setHealth()`, `showHealth()`

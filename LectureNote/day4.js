@@ -247,3 +247,39 @@ const newobj = Object.setPrototypeOf(
 
 console.log(newobj); // { name: 'new crong', lastTime: 'new 11:20' }
 newobj.showHealth();
+
+// Object setPrototypeOf 로 객체간 prototype chain 생성하기
+const healthObj = {
+  // parent
+  showHealth: function() {
+    console.log("오늘 운동시간 : ", this.healthTime);
+  },
+  setHealth: function(newTime) {
+    this.healthTime = newTime;
+  }
+};
+
+// child
+const healthChildObj = {
+  getAge: function() {
+    return this.getAge;
+  }
+};
+
+Object.setPrototypeOf(healthChildObj, healthObj);
+
+const childObj = Object.setPrototypeOf(
+  {
+    age: 22
+  },
+  healthChildObj
+);
+console.log("childObj is ", childObj); // childObj is  { age: 22 }
+// setHealth, showHealth가 prototype에 추가된 것을 볼 수 있다
+// 이처럼 미리 만들어 놓은 것을, 다른 곳에서 가져다가 쓸 수 있다
+childObj.setHealth("11:55");
+childObj.showHealth(); // 오늘 운동시간 :  11:55
+
+// 객체들을 prototype의  chian을 맺을 수 있다 - setPrototypeOf
+const lastHealthObj = Object.setPrototypeOf(healthChildObj, healthObj);
+// lastHealthObj - __proto__ - getAge - __proto__ - setHealth, showHealth
