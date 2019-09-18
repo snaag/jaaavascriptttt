@@ -6,6 +6,8 @@
   - arrow function, this, default parameter, rest parameter
 - object
   - create object by using class & prototype, object assign, setPropertyOf, prototype chaining
+- module
+  - export, import, babel, webpack
 
 ## Template
 
@@ -425,3 +427,163 @@ const lastHealthObj = Object.setPrototypeOf(healthChildObj, healthObj);
 ```
 
 - lastHealthObj - `__proto__` - `getAge()` - `__proto__` - `setHealth()`, `showHealth()`
+
+## module
+
+### module(export & import)의 이해
+
+- module `import` 와 `export` 는 표준화되어있지 않은 **실험적인** 기능이다. 그러나 `nodeJS` 기반으로 백엔드의 개발을 할 때에는 많은 파일이 필요하다. 하지만 브라우저에서와 달리 `script src` 와같이 파일을 불러올 수 없다. 따라서 `amd`, `commonJS` 에서는 `require`, `define` 등을 사용하여 이 역할을 **대신**하였다.
+- `ES2015` 에서 `import`, `export` 에 대한 spec을 제시하였으나 많은 브라우저에서 이를 아직 받아들이지는 못하였다. MS의 edge와 같은 최신 브라우저에서는 작동이 되지만, 모든 브라우저가 그렇지는 않다. 따라서, 작동이 되지 않는 브라우저에서 `import`, `export` 를 사용하려면 **`webpack` 기반으로 환경**을 만들어 놓은 후 **`babel` 을 사용하여 `ES2015`로 transfilling**이 필요하다.
+
+* 먼저 코드를 만든다
+
+```javascript
+// src/app.js
+import log from "./myLogger";
+
+log("my first test data");
+```
+
+```javascript
+// src/myLogger.js
+export function log(data) {
+  console.log(data);
+}
+```
+
+- 바로 `node app.js`를 하면, 바로 `SyntaxError: Unexpected token import` 이런 에러가 뜨면서 실행이 되지 않는다. 그렇다면 어떻게 실행을 시킬 수 있을까? React에서는 `webpack.config.js` 파일을 만들었고, 강의 또한 마찬가지였지만 강의에서 잘려서 나오는 바람에 실행을 할 수 없어, 다른 [자료](https://www.daleseo.com/js-babel-node/)를 참고하여 실행하였다. 아래는 블로그를 보고 실행한 플로우를 정리하였다.
+
+1. 작성한 코드를 NodeJS에서 실행할 수 있도록 transfilling 하기
+
+- `npm i -D babel-cli`
+- `npx babel app.js`
+
+* 이 것을 실행하면, 아래와 같은 결과가 나온다.
+
+```javascript
+import { log } from "./myLogger";
+
+log();
+```
+
+- `;` 이 끝에 붙은 것 말고는 차이가 없다. 이유는, 어떻게 변환을 할 지 별도의 **설정**을 해주지 않았기 때문이다.
+
+2. Babel preset 설정하기
+
+- `npm i -D babel-preset-env`
+- `npx babel --presets env app.js`
+- 이 것을 실행하면, 아래와 같은 결과가 나온다.
+
+```javascript
+"use strict";
+
+var _myLogger = require("./myLogger");
+
+(0, _myLogger.log)();
+```
+
+- 뭔가 많이 바뀌었다. 이것을 빌드해보자.
+
+3. preset 설정해주기
+
+- 빌드하기 전, 바벨의 프리셋 옵션을 주어야한다. 만약 주지 않는다면, 매번 `npx babel-node --presets env app.js` 와 같이 `--preset env` 을 입력해야 한다. 이 것을 미리 세팅해준다면 굳이 입력하지 않고, `npx babel-node app.js` 이렇게만 입력해도 된다.
+- 글에서는 `.babelrc` 에 설정하는 방법도 설명했지만 나는 `package.json` 에 추가하는 방법을 사용했기때문에, 그 방법만 적는다.
+
+```json
+// package.json
+...
+"dependencies": {
+    "babel-loader": "^8.0.6"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  }
+```
+
+4. 빌드하기
+
+- `npx babel-node app.js`
+
+* 빌드 된 결과가 출력된다.
+
+```javascript
+import { log } from "./myLogger";
+
+log("hi");
+```
+
+`hi`
+
+### module(export & import)기반 서비스코드 구현방법
+
+- `export` 와 `export default`
+  1. `export default`
+  - `import` 시 `{}` 없이 할 수 있다.
+  * 예를 들면, `import log from './utility'` 가 가능하다.
+  2. `export`
+  - `import` 시 `{getTime, getHour}` 와 같이, `{}` 가 필요하다.
+- `class`를 활용한 `export`
+
+```javascript
+// myLogger.js (export)
+export default function log(data) {
+  console.log(data);
+}
+
+export class MyLogger {
+  constructor() {
+    this.lectures = ["java", "iOS"];
+  }
+  getLectures() {
+    return this.lectures;
+  }
+}
+```
+
+```javascript
+// app.js (import)
+import log, { MyLogger } from "./myLogger";
+
+const logger = new MyLogger();
+
+log("hi");
+log(`CodeSquad 의 강의 과목은 ${logger.getLectures()} 입니다.`);
+```
+
+- `named export object literal`
+
+```javascript
+// utility.js
+const _ = {
+  log(data) {
+    console.log(data);
+  },
+
+  getTime() {
+    return Date.now();
+  },
+
+  getCurrentHour() {
+    return new Date().getHours();
+  }
+};
+
+export default _;
+```
+
+```javascript
+// app.js
+import _ from "./utility";
+
+_.log("hi");
+_.log(`CurrentHour is ${_.getCurrentHour()}`);
+_.log(`GetTime is ${_.getTime()}`);
+```
+
+- 둘이 다르다 ([Mash-Up 찬연](https://github.com/chayeoi)님이 알려주셨다)
+  - `export default { foo: 1 }`
+    - foo property를 가진 객체를 `default export`로 내보낸 것이다.
+  - `export { foo }`
+    - 미리 위에서 foo라는 변수를 선언해두고, 아래쪽에서 `named export`한 것이다.
