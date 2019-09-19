@@ -8,6 +8,8 @@
   - create object by using class & prototype, object assign, setPropertyOf, prototype chaining
 - module
   - export, import, babel, webpack
+- proxy
+  - proxy
 
 ## Template
 
@@ -587,3 +589,110 @@ _.log(`GetTime is ${_.getTime()}`);
     - foo property를 가진 객체를 `default export`로 내보낸 것이다.
   - `export { foo }`
     - 미리 위에서 foo라는 변수를 선언해두고, 아래쪽에서 `named export`한 것이다.
+
+## Proxy
+
+### Proxy 로 interception 기능 구현
+
+- 네트워크 수업을 들을 때 서버와 클라이언트 사이에서 존재하는 `Proxy 서버`의 역할에 대해 배운 적이 있다. Proxy의 사전적인 의미는 `대리`이다. 잠시 **서버와 클라이언트 사이에서의 Proxy 서버의 역할**에 대해 짚고 가면 좋을 것 같다. [이 블로그](https://brownbears.tistory.com/191) 를 참고했다.
+- `Proxy 서버`는 서버와 클라이언트 사이에 위치하는 것으로, **캐싱**과 **로드밸런싱**을 한다. 캐싱을 하게 되면, 클라이언트가 서버까지 가지 않고 Proxy 서버에서 데이터를 가져올 수 있기 때문에 **보안**과 **속도** 측면에서 성능의 향상을 기대할 수 있다. 즉 **서버의 역할을 `Proxy 서버`가 대리로 한다는 의미**에서 proxy 라는 이름을 붙인 것 같다.
+- 이것이 **Javascript에서는 어떤 역할을 하기에 proxy 라는 이름을 붙였는지** 강의를 들으면서 알 수 있었다. JS에서의 proxy는 어떤 object를 **가로채서 다른 작업을 추가로 할 수 있도록** 한다.
+
+#### Proxy 사용해보기
+
+```javascript
+// object를 만든다
+const myObj = { name: "crong" };
+
+const proxy = new Proxy(myObj, {});
+console.log(proxy.name); // crong
+```
+
+- 앞의 `myObj` 가 가로챔을 당할(?) `object` 이고, 뒤의 `{}`가 `handler function` 이다.
+- 결과를 보면 기존에 object가 가지고 있던 값을 반환하는데, 그렇다면 proxy는 object를 감싼 object가 아닐까 싶지만 type을 보면 그렇지는 않다. proxy는 `Proxy`라는 다른 type을 가진다.
+
+#### Proxy의 `handler function` 사용해보기
+
+- [MDN])(https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy)에서 proxy에 대해 `Proxy 객체는 기본적인 동작(속성 접근, 할당, 순회, 열거, 함수 호출 등)의 새로운 행동을 정의할 때 사용합니다.` 라고 말한다. 새로운 행동을 정의하도록 하는 함수가 `handler function` 이다.
+
+```javascript
+const proxy2 = new Proxy(myObj, {
+  get: function(target, property, receiver) {
+    // getter
+    // target: object (myObj)
+    // property: object가 가진 속성 (myObj에서는 name이 property 이다)
+    // receiver: proxy 객체 자체
+    console.log("get value");
+    return target[property];
+    // return Reflect.get(target, property);
+    // 단순히 값만 반환하는게 목적이라면 이 방법을 더 권장한다고 한다.
+  },
+  set: function(target, property, value) {
+    // setter
+    console.log("change value");
+
+    target[property] = value;
+    // target[property]에 할당한다
+    // 이것을 하지 않으면, 값이 바뀌지 않는다
+  }
+});
+
+console.log(proxy2.name); // get value (getter), crong
+proxy2.name = "codesquad"; // change value (setter)
+console.log(proxy2.name); // get value (getter), codesquad
+```
+
+- `get()` 함수는 `proxy2.name`과 같은 get 이 발생할 때마다 호출이 된다. `set()` 함수는 `proxy2.name = 'codesquad'`와 같은 set 이 발생할 때마다 호출이 된다. 따라서 **이 시점에 intercept해서 우리가 원하는 추가적인 작업**을 할 수 있게 된다.
+
+#### Proxy의 `handler function` 을 사용하여 값이 변경된 횟수를 로깅해보기
+
+```javascript
+const myObj3 = {
+  name: "crong",
+  changedValue: 0
+};
+const proxy3 = new Proxy(myObj, {
+  get: function(target, property, receiver) {
+    console.log(`get value of ${property}`);
+    return target[property];
+  },
+  set: function(target, property, value) {
+    console.log("change value");
+    target["changedValue"] = target["changedValue"] + 1; // 로깅하는 부분이다
+    target[property] = value;
+  }
+});
+
+proxy3.changedValue = 0; // 나는 이걸 해주지 않으면, 아래에서 changedValue가 NaN으로 떠서, 부득이하게 적어줬다
+proxy3.name = "sanga"; // change value
+proxy3.name = "snaag"; // change value
+console.log(proxy3.changedValue); // 2
+proxy3.name = "startup campus2";
+console.log(proxy3.name); // startup campus2
+console.log(myObj); // { name: 'startup campus2', changedValue: 3 }
+```
+
+- `set()` 함수에서 값이 바뀔 때 마다 `target["changedValue"] = target["changedValue"] + 1;` 를 해주고 있다. 마지막에 출력했을 때 `changedValue: 3` 인 것을 볼 수 있다.
+
+#### Proxy의 `handler function` 을 사용하여 사용자가 없는 `property`에 접근했을 때 알려주는 예외처리 만들기
+
+```javascript
+const proxy5 = new Proxy(
+  { name: "crong", changedValue: 0 },
+  {
+    get: function(target, property, receiver) {
+      return property in target ? target[property] : "anonymous";
+    },
+    set: function(target, property, value) {
+      target["changedValue"]++;
+      target[property] = value;
+    }
+  }
+);
+
+console.log(proxy5.age); // anonymous
+console.log(proxy5.status); // anonymous
+console.log(proxy5.name); // crong
+```
+
+- `return property in target ? target[property] : "anonymous"` 삼항연산자를 사용하여 `property`가 `target` 에 없을 경우 `"anonymous"` 라는 텍스트를 리턴하도록 했다.

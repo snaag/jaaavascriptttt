@@ -26,7 +26,7 @@
 
 ##### [Part 3](./LectureNote/Notes/Part3.md)
 
-- template, function, object
+- template, function, object, module, proxy
 
 #### /LectureNote/Quizes
 
