@@ -613,7 +613,7 @@ console.log(proxy.name); // crong
 
 #### Proxy의 `handler function` 사용해보기
 
-- [MDN])(https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy)에서 proxy에 대해 `Proxy 객체는 기본적인 동작(속성 접근, 할당, 순회, 열거, 함수 호출 등)의 새로운 행동을 정의할 때 사용합니다.` 라고 말한다. 새로운 행동을 정의하도록 하는 함수가 `handler function` 이다.
+- [MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy)에서 proxy에 대해 `Proxy 객체는 기본적인 동작(속성 접근, 할당, 순회, 열거, 함수 호출 등)의 새로운 행동을 정의할 때 사용합니다.` 라고 말한다. 새로운 행동을 정의하도록 하는 함수가 `handler function` 이다.
 
 ```javascript
 const proxy2 = new Proxy(myObj, {
