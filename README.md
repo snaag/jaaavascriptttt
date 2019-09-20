@@ -28,6 +28,10 @@
 
 - template, function, object, module, proxy
 
+##### [Part 4](./LectureNote/Notes/Part4.md)
+
+- 미니 프로젝트
+
 #### /LectureNote/Quizes
 
 - 인프런 강의 (모던 자바스크립트 개발을 위한 ES6 강좌) 연습문제
