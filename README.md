@@ -1,41 +1,22 @@
 # 🐱 JavaScript 🐱
 
-## Algorithm
-
-### /Algorithm
-
-- 프로그래머스의 자바스크립트 알고리즘 풀기
-
 ## Lecture
+### 1. 인프런 강의 `모던 자바스크립트 개발을 위한 ES6 강좌` 정리
+* [Part 1](./LectureNote/0_Inflearn/Notes/Part1.md)
+    * scope, string, array
+* [Part 2](./LectureNote/0_Inflearn/Notes/Part2.md)
+    - object, destructuring, set & weakset, map & weakmap
 
-### /LectureNote
+* [Part 3](./LectureNote/0_Inflearn/Notes/Part3.md)
+    - template, function, object, module, proxy
 
-- 인프런 강의 (모던 자바스크립트 개발을 위한 ES6 강좌) 정리
+* [Part 4](./LectureNote/0_Inflearn/Notes/Part4.md)
+    - 미니 프로젝트
 
-#### /LectureNote/...
 
-- 강의 내용 정리
 
-##### [Part 1](./LectureNote/Notes/Part1.md)
+### 2. 책 `웹 프로그래밍을 위한 자바스크립트 기본 편` 정리  
 
-- scope, string, array
+* **기본 코드는 [이 곳](https://github.com/funnycom/js-basic-book) 에서 가져왔습니다**
 
-##### [Part 2](./LectureNote/Notes/Part2.md)
-
-- object, destructuring, set & weakset, map & weakmap
-
-##### [Part 3](./LectureNote/Notes/Part3.md)
-
-- template, function, object, module, proxy
-
-##### [Part 4](./LectureNote/Notes/Part4.md)
-
-- 미니 프로젝트
-
-#### /LectureNote/Quizes
-
-- 인프런 강의 (모던 자바스크립트 개발을 위한 ES6 강좌) 연습문제
-
-#### /LectureNote/Problems
-
-- 인프런 강의 (모던 자바스크립트 개발을 위한 ES6 강좌) 들으면서 애매한 부분들 정리
+* [정리](./LectureNote/1_js-basic-book/Notes/note.md)
