@@ -145,6 +145,25 @@ toyRobot = new toy("Robot", "25,000", function() {
 
 ## 배열
 
+### 배열 선언하기
+
+- 리터럴 방식으로 선언하기
+  `const arr = [1, 2, 3];`
+- Array 객체를 사용하여 선언하기
+  `const arr = new Array();`
+
+### 함수
+
+- `splice()`
+  - 원하는 위치의 요소를 삭제하거나, 추가할 수 있다.
+  * `splice(index, opt:삭제할 갯수, opt:그자리에 넣을 값`
+  * 이 때 2번째 인자인 `삭제할 갯수` 를 넣지 않으면, index부터 끝까지 삭제한다.
+
+* `pop()`, `shift()`
+  - 둘이 비슷한 역할을 한다.
+  - `pop()`: 맨 뒤에 있는 요소를 추출한다.
+  - `shift()`: 맨 앞에 있는 요소를 추출한다.
+
 ### 연습문제
 
 - `html tag` 를 `innerHTML` 을 사용하여 `createElement()` 를 사용하지 않고, 바로 넣을 수 있다.
