@@ -152,6 +152,14 @@ toyRobot = new toy("Robot", "25,000", function() {
 - Array 객체를 사용하여 선언하기
   `const arr = new Array();`
 
+* **주의하기**
+  - array를 복사하고 싶을 때 `bArr = aArr` 이렇게 하게 되면, shallow copy를 하게 된다. 따라서 `bArr` 에서 `push()`, `pop()`, `shift()` 등의 연산을 한 결과가 `aArr` 에도 적용이 된다.
+  - 따라서 제대로 복사를 하려면(deep copy를 하려면)
+    - `bArr = Array.from(aArr) // Array.from`
+    - `bArr = bArr.concat(aArr) // concat`
+    - `bArr = [...aArr] // spread`
+    - 와 같이, 리터럴 방식으로 선언을 해주어야 한다.
+
 ### 함수
 
 - `splice()`
