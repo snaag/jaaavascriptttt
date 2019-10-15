@@ -140,3 +140,23 @@ toyRobot = new toy("Robot", "25,000", function() {
   console.log(`이름: ${this.name}, 가격: ${this.price}`);
 });
 ```
+
+# Part 07
+
+## 배열
+
+### 연습문제
+
+- `html tag` 를 `innerHTML` 을 사용하여 `createElement()` 를 사용하지 않고, 바로 넣을 수 있다.
+
+```javascript
+for (let i = 0; i < data.length; i++) {
+  items += `<li id='${i}' class='item'>${data[i]}</li>`;
+}
+
+itemList.innerHTML = items;
+```
+
+- `querySelector()` 를 사용해서 임의의 class, id 를 갖는 도큐먼트 객체에 접근할 수 있다.
+  - `document.querySelector("#class")`
+  - `document.querySelector("#id")`
